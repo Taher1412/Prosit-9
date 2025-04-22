@@ -1,6 +1,8 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
-public class SocieteArrayList implements IGestion {
+public class SocieteArrayList implements IGestion<employe> {
     private ArrayList<employe> employes;
 
     public SocieteArrayList() {
@@ -13,24 +15,48 @@ public class SocieteArrayList implements IGestion {
     }
 
     @Override
-    public void supprimerEmploye(int id) {
-        employes.removeIf(e -> e.getId() == id);
-    }
-
-    @Override
-    public employe rechercherEmploye(int id) {
+    public boolean rechercherEmploye(String nom) {
         for (employe e : employes) {
-            if (e.getId() == id) {
-                return e;
+            if (e.getNom().equals(nom)) {
+                return true;
             }
         }
-        return null;
+        return false;
     }
 
     @Override
-    public void afficherEmployes() {
+    public boolean rechercherEmploye(employe e) {
+        return employes.contains(e);
+    }
+
+    @Override
+    public void supprimerEmploye(employe e) {
+        employes.remove(e);
+    }
+
+    @Override
+    public void displayEmploye() {
         for (employe e : employes) {
             System.out.println(e);
         }
+    }
+
+    @Override
+    public void trierEmployeParId() {
+        Collections.sort(employes);
+    }
+
+    @Override
+    public void trierEmployeParNomDépartementEtGrade() {
+        Collections.sort(employes, new Comparator<employe>() {
+            @Override
+            public int compare(employe e1, employe e2) {
+                int compareDept = e1.getNomDept().compareTo(e2.getNomDept());
+                if (compareDept != 0) {
+                    return compareDept;
+                }
+                return Integer.compare(e1.getGrade(), e2.getGrade());
+            }
+        });
     }
 }
